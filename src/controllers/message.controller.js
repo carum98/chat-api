@@ -1,3 +1,4 @@
+import Chat from "../models/Chat.js"
 import Message from "../models/Message.js"
 import User from "../models/User.js"
 
@@ -21,15 +22,27 @@ export const create = async (req, res) => {
 
 	const userTo = await User.findOne({ number: user_number })
 
+	if (!userTo) {
+		return res.status(404).json({ message: "User not found" })
+	}
+
+	let chat = await Chat.findOne({ fromUserId: req.user._id, toUserId: userTo._id })
+
+	if (!chat) {
+		chat = await Chat.create({
+			fromUserId: req.user._id,
+			toUserId: userTo._id,
+		})
+	}
+
 	const message = await Message.create({
 		content,
 		fromUserId: req.user._id,
 		toUserId: userTo._id,
+		chatId: chat._id,
 	})
 
-	return res.status(200).json({
-		message
-	})
+	return res.status(200).json({ message })
 }
 
 export const update = async (req, res) => {

@@ -21,7 +21,7 @@ const UserSchema = new Schema({
 		required: true,
 	},
 }, {
-	timestamps: true,
+	timestamps: { createdAt: true, updatedAt: false },
 	versionKey: false,
 })
 
