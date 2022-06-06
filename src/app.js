@@ -1,5 +1,6 @@
 import express from "express"
 import morgan from "morgan"
+import { createServer } from "http"
 
 import AuthMiddleware from "./middlewares/auth.middleware.js"
 
@@ -18,4 +19,4 @@ app.use('/api', AuthRoutes)
 app.use('/api/messages', MessageRoutes)
 app.use('/api/chats', ChatsRoutes)
 
-export default app
+export default createServer(app)

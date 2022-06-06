@@ -12,3 +12,12 @@ mongoose.connect(`mongodb://mongodb:27017`, {
 }).catch((err) => {
 	console.log(err)
 })
+
+mongoose.set('toJSON', {
+	virtuals: true,
+	transform: (doc, ret) => {
+		ret.id = ret._id;
+		delete ret._id;
+		delete ret.updatedAt;
+	}
+});
