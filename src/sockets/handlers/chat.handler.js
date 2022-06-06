@@ -9,6 +9,10 @@ function typing() {
 export default (io, socket) => {
 	console.log("Connecting to Chat")
 
+	socket.emit("chant:connect", {
+		user: socket.user,
+	})
+
 	socket.on("disconnect", disconnect)
 
 	socket.on("typing", typing)

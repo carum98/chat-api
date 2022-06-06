@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken"
 
 export default async (socket, next) => {
 	try {
-		// const token = socket.handshake.auth.token
-		const token = socket.handshake.headers.autorization
+		const token = socket.handshake.auth.token
 
 		if (!token) {
 			return next(new Error("No token provided"))

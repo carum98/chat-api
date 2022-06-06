@@ -4,7 +4,7 @@ import chatHandler from "./handlers/chat.handler.js";
 
 export const CreateSocket = (httpServer) => {
 	const io = new Server(httpServer, {
-		serveClient: false,
+		serveClient: true,
 	});
 
 	io.of('/chats').use(AuthMiddleware)

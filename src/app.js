@@ -15,8 +15,11 @@ app.use(express.json())
 
 app.use(AuthMiddleware)
 
+app.use('/admin', express.static('/app/src/public'))
+
 app.use('/api', AuthRoutes)
 app.use('/api/messages', MessageRoutes)
 app.use('/api/chats', ChatsRoutes)
+
 
 export default createServer(app)

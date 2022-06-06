@@ -1,0 +1,13 @@
+#app {
+	display: flex;
+}
+
+#app>div {
+	width: 50%;
+	padding: 1rem;
+}
+
+p {
+	width: 100%;
+	overflow-wrap: break-word;
+}

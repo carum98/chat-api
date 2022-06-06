@@ -2,7 +2,7 @@ import User from "../models/User.js"
 import jwt from "jsonwebtoken"
 
 export default async (req, res, next) => {
-	const nonSecurePaths = ['/api/login', '/api/register'];
+	const nonSecurePaths = ['/api/login', '/api/register', '/admin/', '/admin/index.js', '/socket.io/socket.io.js', '/admin/img/favicon.ico', '/admin/index.css'];
 	if (nonSecurePaths.includes(req.path)) return next();
 
 	try {

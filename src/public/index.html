@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="img/favicon.ico">
+	<title>Chat API</title>
+	<link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+	<div id="app">
+		<div>
+			<form id="form-1">
+				<input name="email" type="text">
+				<input name="password" type="password">
+				<button type="submit">Send</button>
+			</form>
+
+			<p id="token-1"></p>
+
+			<code id="user-1"></code>
+
+			<ul id="messages-list-1"></ul>
+		</div>
+
+		<div>
+			<form id="form-2">
+				<input name="email" type="text">
+				<input name="password" type="password">
+				<button type="submit">Send</button>
+			</form>
+
+			<p id="token-2"></p>
+
+			<code id="user-2"></code>
+
+			<ul id="messages-list-2"></ul>
+		</div>
+	</div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="index.js"></script>
+</body>
+
+</html>
