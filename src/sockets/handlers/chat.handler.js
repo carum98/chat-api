@@ -1,21 +1,17 @@
-function disconnect() {
-	console.log("Disconnecting from Chat")
-}
-
-function typing() {
-	console.log("Typing...")
-}
-
 export default (io, socket) => {
 	console.log("Connecting to Chat")
 
-	socket.emit("chant:connect", {
+	socket.emit("chat:connect", {
 		user: socket.user,
 	})
 
-	socket.on("disconnect", disconnect)
+	socket.on("disconnect", () => {
+		console.log("Disconnecting from Chat")
+	})
 
-	socket.on("typing", typing)
+	socket.on("chat:typing", () => {
+		socket.broadcast.emit("chat:typing")
+	})
 
 	socket.on("error", () => {
 		socket.disconnect();

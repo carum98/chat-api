@@ -6,11 +6,16 @@ const ChatSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'User',
 		required: true,
-		unique: true,
+		// unique: true,
 	},
 	toUserId: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
+		required: true,
+		// unique: true,
+	},
+	socketId: {
+		type: String,
 		required: true,
 		unique: true,
 	},

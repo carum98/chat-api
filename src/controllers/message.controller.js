@@ -1,6 +1,7 @@
 import Chat from "../models/Chat.js"
 import Message from "../models/Message.js"
 import User from "../models/User.js"
+import { io } from "../index.js"
 
 export const get = async (req, res) => {
 	const messages = await Message.find({
@@ -26,21 +27,21 @@ export const create = async (req, res) => {
 		return res.status(404).json({ message: "User not found" })
 	}
 
-	let chat = await Chat.findOne({ fromUserId: req.user._id, toUserId: userTo._id })
-
-	if (!chat) {
-		chat = await Chat.create({
-			fromUserId: req.user._id,
-			toUserId: userTo._id,
-		})
-	}
+	const chat = await Chat.findOne({
+		fromUserId: req.user._id,
+		toUserId: userTo._id
+	})
 
 	const message = await Message.create({
 		content,
 		fromUserId: req.user._id,
 		toUserId: userTo._id,
-		chatId: chat._id,
+		chatId: chat?._id,
 	})
+
+	if (chat) {
+		io.of("/chats").to(chat.socketId).emit("chat:message", message)
+	}
 
 	return res.status(200).json({ message })
 }
