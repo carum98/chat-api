@@ -16,7 +16,7 @@ const ChatSchema = new Schema({
 	},
 	socketId: {
 		type: String,
-		required: true,
+		// required: true,
 		unique: true,
 	},
 }, {
