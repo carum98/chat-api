@@ -19,27 +19,24 @@ export const get = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-	const { content, user_number } = req.body
+	const { content, chat_id } = req.body
 
-	const userTo = await User.findOne({ number: user_number })
+	const chat = await Chat.findById(chat_id)
 
-	if (!userTo) {
-		return res.status(404).json({ message: "User not found" })
+	if (!chat) {
+		return res.status(404).json({ message: "Chat not found" })
 	}
 
-	const chat = await Chat.findOne({
-		fromUserId: req.user._id,
-		toUserId: userTo._id
-	})
+	let toUserId = [`${chat.fromUserId}`, `${chat.toUserId}`].find(id => id !== `${req.user._id}`)
 
 	const message = await Message.create({
 		content,
 		fromUserId: req.user._id,
-		toUserId: userTo._id,
-		chatId: chat?._id,
+		toUserId: toUserId,
+		chatId: chat._id,
 	})
 
-	if (chat) {
+	if (chat.socketId !== null) {
 		io.of("/chats").to(chat.socketId).emit("chat:message", message)
 	}
 
