@@ -3,11 +3,19 @@ import User from "../models/User.js"
 import Message from "../models/Message.js"
 
 export const get = async (req, res) => {
-	let chats = await Chat.find({ $or: [{ fromUserId: req.user._id }, { toUserId: req.user._id }] })
-		.populate("fromUserId", { name: 1 })
-		.populate("toUserId", { name: 1 })
+	let chats = await Chat.find({ users: { $in: req.user._id } })
+		.populate("users", "name")
+		.populate("message", "content createdAt")
 
-	return res.status(200).json({ chats })
+	let data = chats.map(chat => {
+		return {
+			id: chat._id,
+			user: chat.users.find(user => user.id.toString() !== req.user._id.toString()),
+			message: chat.message,
+		}
+	})
+
+	return res.status(200).json({ data })
 }
 
 export const create = async (req, res) => {
@@ -20,8 +28,7 @@ export const create = async (req, res) => {
 	}
 
 	let chat = await Chat.create({
-		fromUserId: req.user._id,
-		toUserId: user._id,
+		users: [req.user._id, user._id],
 		socketId: null,
 	})
 
@@ -29,12 +36,19 @@ export const create = async (req, res) => {
 }
 
 export const messages = async (req, res) => {
-	const messages = await Message.find({
-		chatId: req.params.id,
-		fromUserId: req.user._id,
-	}, { chatId: 0 })
-		.populate("fromUserId", { name: 1 })
-		.populate("toUserId", { name: 1 })
+	const messages = await Message.find({ $or: [{ from: req.user._id }, { to: req.user._id }] }, { chatId: 0 })
+		.populate("from", { name: 1 })
+		.populate("to", { name: 1 })
+		.sort({ createdAt: -1 })
 
-	return res.status(200).json({ messages })
+	let data = messages.map(message => {
+		return {
+			id: message._id,
+			content: message.content,
+			createdAt: message.createdAt,
+			isMine: req.user._id.toString() === message.from._id.toString(),
+		}
+	})
+
+	return res.status(200).json({ data })
 }
