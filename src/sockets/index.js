@@ -6,6 +6,11 @@ import chatHandler from "./handlers/chat.handler.js"
 export const CreateSocket = (httpServer) => {
 	const io = new Server(httpServer, {
 		serveClient: true,
+		cors: {
+			origin: "*",
+			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+			allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+		}
 	});
 
 	io.of('/chats').use(AuthMiddleware)
