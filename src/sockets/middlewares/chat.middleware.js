@@ -10,10 +10,11 @@ export default async (socket, next) => {
 
 		let chat = await Chat.findById({ _id: chat_id })
 
-		if (chat.socketId === null) {
-			socket.chat = await Chat.findByIdAndUpdate(chat._id, { socketId: socket.id }, { new: true })
+		if (!chat) {
+			return next(new Error("Invalid chat_id"))
 		}
 
+		socket.chat = chat
 		next()
 	} catch (error) {
 		console.log(error)

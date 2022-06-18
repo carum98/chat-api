@@ -16,11 +16,7 @@ export const CreateSocket = (httpServer) => {
 	io.of('/chats').use(AuthMiddleware)
 	io.of('/chats').use(ChatMiddleware)
 
-	const onChatConnection = (socket) => {
-		chatHandler(io, socket)
-	}
-
-	io.of('/chats').on("connection", onChatConnection)
+	io.of('/chats').on("connection", chatHandler)
 
 	return io
 }

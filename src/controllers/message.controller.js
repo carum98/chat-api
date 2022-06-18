@@ -24,20 +24,16 @@ export const create = async (req, res) => {
 		return res.status(404).json({ message: "Chat not found" })
 	}
 
-	let to = chat.users.find(id => `${id}` !== `${req.user._id}`)
-
 	const message = await Message.create({
 		content,
 		from: req.user._id,
-		to: to,
-		chatId: chat._id,
+		to: chat.users.find(id => `${id}` !== `${req.user._id}`),
+		chatId: chat_id,
 	})
 
 	await chat.update({ message: message._id })
 
-	if (chat.socketId !== null) {
-		io.of("/chats").to(chat.socketId).emit("chat:message", message)
-	}
+	io.of("/chats").to(`chat:${chat_id}`).emit("chat:message", message)
 
 	return res.status(200).json({ data: message })
 }

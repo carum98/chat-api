@@ -29,7 +29,6 @@ export const create = async (req, res) => {
 
 	let chat = await Chat.create({
 		users: [req.user._id, user._id],
-		socketId: null,
 	})
 
 	return res.status(200).json({ chat })
