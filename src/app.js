@@ -9,6 +9,7 @@ import AuthRoutes from "./routes/auth.routes.js"
 import MessageRoutes from "./routes/message.routes.js"
 import ChatsRoutes from "./routes/chat.routes.js"
 import ContactsRoutes from "./routes/contacts.routes.js"
+import SelfRoutes from "./routes/self.routes.js"
 
 const app = express()
 
@@ -25,6 +26,6 @@ app.use('/api', AuthRoutes)
 app.use('/api/messages', MessageRoutes)
 app.use('/api/chats', ChatsRoutes)
 app.use('/api/contacts', ContactsRoutes)
-
+app.use('/api/self', SelfRoutes)
 
 export default createServer(app)
