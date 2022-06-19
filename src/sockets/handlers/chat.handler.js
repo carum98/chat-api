@@ -12,7 +12,7 @@ export default (socket) => {
 	})
 
 	socket.on("chat:typing", () => {
-		socket.broadcast.emit("chat:typing")
+		socket.to(`chat:${socket.handshake.query.chat_id}`).emit("chat:typing")
 	})
 
 	socket.on("error", () => {

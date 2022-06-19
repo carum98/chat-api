@@ -27,15 +27,27 @@ export const create = async (req, res) => {
 		return res.status(404).json({ message: "User not found" })
 	}
 
-	let chat = await Chat.create({
+	let chatRaw = await Chat.create({
 		users: [req.user._id, user._id],
 	})
 
-	return res.status(200).json({ chat })
+	let chat = await Chat.findById(chatRaw._id)
+		.populate("users", "name")
+		.populate("message", "content createdAt")
+
+	return res.status(200).json({
+		data: {
+			id: chat._id,
+			user: chat.users.find(user => user.id.toString() !== req.user._id.toString()),
+			message: chat.message,
+		}
+	})
 }
 
 export const messages = async (req, res) => {
-	const messages = await Message.find({ $or: [{ from: req.user._id }, { to: req.user._id }] }, { chatId: 0 })
+	const { id } = req.params
+
+	const messages = await Message.find({ chatId: id })
 		.populate("from", { name: 1 })
 		.populate("to", { name: 1 })
 		.sort({ createdAt: -1 })
