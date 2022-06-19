@@ -4,7 +4,7 @@ import Message from "../models/Message.js"
 
 export const get = async (req, res) => {
 	let chats = await Chat.find({ users: { $in: req.user._id } })
-		.populate("users", "name")
+		.populate("users", "name image")
 		.populate("message", "content createdAt")
 
 	let data = chats.map(chat => {
@@ -32,7 +32,7 @@ export const create = async (req, res) => {
 	})
 
 	let chat = await Chat.findById(chatRaw._id)
-		.populate("users", "name")
+		.populate("users", "name image")
 		.populate("message", "content createdAt")
 
 	return res.status(200).json({
@@ -48,8 +48,8 @@ export const messages = async (req, res) => {
 	const { id } = req.params
 
 	const messages = await Message.find({ chatId: id })
-		.populate("from", { name: 1 })
-		.populate("to", { name: 1 })
+		.populate("from", { name: 1, image: 1 })
+		.populate("to", { name: 1, image: 1 })
 		.sort({ createdAt: -1 })
 
 	let data = messages.map(message => {

@@ -20,6 +20,9 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	image: {
+		type: String,
+	}
 }, {
 	timestamps: { createdAt: true, updatedAt: false },
 	versionKey: false,

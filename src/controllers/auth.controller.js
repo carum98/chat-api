@@ -31,6 +31,7 @@ export const login = async (req, res) => {
 }
 
 export const register = async (req, res) => {
+	const { file } = req
 	const { name, email, password, number } = req.body
 
 	const userFound = await User.findOne({ email })
@@ -46,6 +47,7 @@ export const register = async (req, res) => {
 		email,
 		password: await User.encryptPassword(password),
 		number,
+		image: file.filename,
 	})
 
 	await user.save()

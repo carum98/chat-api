@@ -19,6 +19,7 @@ app.use(express.json())
 app.use(AuthMiddleware)
 
 app.use('/admin', express.static('/app/src/public'))
+app.use('/images', express.static('/app/uploads'))
 
 app.use('/api', AuthRoutes)
 app.use('/api/messages', MessageRoutes)
