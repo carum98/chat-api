@@ -5,13 +5,32 @@ import Message from "../models/Message.js"
 export const get = async (req, res) => {
 	let chats = await Chat.find({ users: { $in: req.user._id } })
 		.populate("users", "name image")
-		.populate("message", "content createdAt")
+		.populate("message", "id content createdAt isRead from")
+
+	await Promise.all(
+		chats.map(async chat => {
+			chat.count = await Message.countDocuments({
+				chatId: chat._id,
+				to: req.user._id,
+				isRead: false,
+			})
+		})
+	)
 
 	let data = chats.map(chat => {
+		let message = chat.message ? {
+			id: chat.message._id,
+			content: chat.message.content,
+			createdAt: chat.message.createdAt,
+			isMine: req.user._id.toString() === chat.message.from._id.toString(),
+			isRead: chat.message.isRead,
+		} : null
+
 		return {
 			id: chat._id,
 			user: chat.users.find(user => user.id.toString() !== req.user._id.toString()),
-			message: chat.message,
+			message,
+			count: chat.count,
 		}
 	})
 
@@ -47,6 +66,8 @@ export const create = async (req, res) => {
 export const messages = async (req, res) => {
 	const { id } = req.params
 
+	await Message.updateMany({ chatId: id, to: req.user._id, isRead: false }, { isRead: true })
+
 	const messages = await Message.find({ chatId: id })
 		.populate("from", { name: 1, image: 1 })
 		.populate("to", { name: 1, image: 1 })
@@ -58,6 +79,7 @@ export const messages = async (req, res) => {
 			content: message.content,
 			createdAt: message.createdAt,
 			isMine: req.user._id.toString() === message.from._id.toString(),
+			isRead: message.isRead,
 		}
 	})
 

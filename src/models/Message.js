@@ -16,6 +16,10 @@ const MessageSchema = new Schema({
 		ref: 'User',
 		required: true,
 	},
+	isRead: {
+		type: Boolean,
+		default: false,
+	},
 	chatId: {
 		type: Schema.Types.ObjectId,
 		ref: 'Chat',
