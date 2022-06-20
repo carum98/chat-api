@@ -1,4 +1,5 @@
 import Chat from "../models/Chat.js"
+import User from "../models/User.js"
 import Message from "../models/Message.js"
 import { io } from "../index.js"
 
@@ -31,9 +32,12 @@ export const create = async (req, res) => {
 		chatId: chat_id,
 	})
 
-	await chat.update({ message: message._id })
+	await chat.updateOne({ message: message._id })
 
 	io.of("/chats").to(`chat:${chat_id}`).emit("chat:message", message)
+
+	let userTo = await User.findById(message.to.toString())
+	io.of("/updates").to(userTo.socketId).to(req.user.socketId).emit("updates:message")
 
 	return res.status(200).json({ data: message })
 }
