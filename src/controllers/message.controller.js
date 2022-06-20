@@ -4,16 +4,9 @@ import Message from "../models/Message.js"
 import { io } from "../index.js"
 
 export const get = async (req, res) => {
-	const messages = await Message.find({
-		$or: [
-			{ from: req.user._id },
-			{ to: req.user._id },
-		],
-	})
-		.populate("from", { name: 1, email: 1, number: 1 })
-		.populate("to", { name: 1, email: 1, number: 1 })
+	const messages = await Message.findById(req.params.id)
 
-	return res.status(200).json({ data: messages })
+	return res.status(200).json({ data: messages.createObj(req.user._id.toString()) })
 }
 
 export const create = async (req, res) => {
@@ -33,13 +26,20 @@ export const create = async (req, res) => {
 	})
 
 	await chat.updateOne({ message: message._id })
+	const userTo = await User.findById(message.to.toString())
 
-	io.of("/chats").to(`chat:${chat_id}`).emit("chat:message", message)
+	io.of("/chats").to(`chat:${chat_id}`)
+		.emit("chat:message", { message_id: message._id })
 
-	let userTo = await User.findById(message.to.toString())
-	io.of("/updates").to(userTo.socketId).to(req.user.socketId).emit("updates:message")
+	io.of("/updates").to(userTo.socketId)
+		.emit("updates:message", { message: message.createObj(), chat_id })
 
-	return res.status(200).json({ data: message })
+	io.of("/updates").to(req.user.socketId)
+		.emit("updates:message", { message: message.createObj(req.user._id.toString()), chat_id })
+
+	return res.status(200).json({
+		data: message.createObj(req.user._id.toString())
+	})
 }
 
 export const update = async (req, res) => {

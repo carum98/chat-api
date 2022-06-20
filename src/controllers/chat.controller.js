@@ -18,17 +18,12 @@ export const get = async (req, res) => {
 	)
 
 	let data = chats.map(chat => {
-		let message = chat.message ? {
-			id: chat.message._id,
-			content: chat.message.content,
-			createdAt: chat.message.createdAt,
-			isMine: req.user._id.toString() === chat.message.from._id.toString(),
-			isRead: chat.message.isRead,
-		} : null
+		let user = chat.users.find(user => user.id.toString() !== req.user._id.toString())
+		let message = chat.message ? chat.message.createObj(req.user._id.toString()) : null
 
 		return {
 			id: chat._id,
-			user: chat.users.find(user => user.id.toString() !== req.user._id.toString()),
+			user,
 			message,
 			count: chat.count,
 		}
@@ -69,19 +64,9 @@ export const messages = async (req, res) => {
 	await Message.updateMany({ chatId: id, to: req.user._id, isRead: false }, { isRead: true })
 
 	const messages = await Message.find({ chatId: id })
-		.populate("from", { name: 1, image: 1 })
-		.populate("to", { name: 1, image: 1 })
 		.sort({ createdAt: -1 })
 
-	let data = messages.map(message => {
-		return {
-			id: message._id,
-			content: message.content,
-			createdAt: message.createdAt,
-			isMine: req.user._id.toString() === message.from._id.toString(),
-			isRead: message.isRead,
-		}
+	return res.status(200).json({
+		data: messages.map(message => message.createObj(req.user._id.toString()))
 	})
-
-	return res.status(200).json({ data })
 }

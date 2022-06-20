@@ -30,4 +30,14 @@ const MessageSchema = new Schema({
 	versionKey: false,
 })
 
+MessageSchema.methods.createObj = function (user_id) {
+	return {
+		id: this._id,
+		content: this.content,
+		createdAt: this.createdAt,
+		isMine: user_id === this.from._id.toString(),
+		isRead: this.isRead,
+	}
+}
+
 export default model('Message', MessageSchema)
