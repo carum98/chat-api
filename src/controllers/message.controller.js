@@ -1,7 +1,7 @@
 import Chat from "../models/Chat.js"
-import User from "../models/User.js"
 import Message from "../models/Message.js"
-import { io } from "../index.js"
+import * as UpdateControllerSocket from "../sockets/controllers/update.controller.js"
+import * as ChatControllerSocket from "../sockets/controllers/chat.controller.js"
 
 export const get = async (req, res) => {
 	const messages = await Message.findById(req.params.id)
@@ -26,16 +26,9 @@ export const create = async (req, res) => {
 	})
 
 	await chat.updateOne({ message: message._id })
-	const userTo = await User.findById(message.to.toString())
 
-	io.of("/chats").to(`chat:${chat_id}`)
-		.emit("chat:message", { message_id: message._id })
-
-	io.of("/updates").to(userTo.socketId)
-		.emit("updates:message", { message: message.createObj(), chat_id })
-
-	io.of("/updates").to(req.user.socketId)
-		.emit("updates:message", { message: message.createObj(req.user._id.toString()), chat_id })
+	ChatControllerSocket.newMessage(message._id, chat_id)
+	UpdateControllerSocket.newMessage(message._id, req.user._id.toString(), chat_id)
 
 	return res.status(200).json({
 		data: message.createObj(req.user._id.toString())
@@ -43,8 +36,15 @@ export const create = async (req, res) => {
 }
 
 export const update = async (req, res) => {
-	const message = await Message.findByIdAndUpdate(req.params.id, req.body, {
+	const { is_read } = req.body
+
+	if (!is_read) {
+		return res.status(400).json({ message: "Bad request" })
+	}
+
+	const message = await Message.findByIdAndUpdate(req.params.id, { isRead: is_read }, {
 		new: true,
 	})
+
 	return res.status(200).json({ data: message })
 }
