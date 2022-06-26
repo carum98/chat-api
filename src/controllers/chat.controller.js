@@ -1,7 +1,7 @@
 import Chat from "../models/Chat.js"
 import User from "../models/User.js"
 import Message from "../models/Message.js"
-import * as MessageController from "../sockets/controllers/update.controller.js"
+import * as UpdateControllerSocket from "../sockets/controllers/update.controller.js"
 
 export const get = async (req, res) => {
 	let chats = await Chat.find({ users: { $in: req.user._id } })
@@ -47,14 +47,15 @@ export const create = async (req, res) => {
 	})
 
 	let chat = await Chat.findById(chatRaw._id)
-		.populate("users", "name image")
-		.populate("message", "content createdAt")
+		.populate("users", "name image socketId")
+
+	UpdateControllerSocket.newChat(chat)
 
 	return res.status(200).json({
 		data: {
 			id: chat._id,
 			user: chat.users.find(user => user.id.toString() !== req.user._id.toString()),
-			message: chat.message,
+			message: null,
 		}
 	})
 }
@@ -64,7 +65,7 @@ export const messages = async (req, res) => {
 
 	Message.find({ chatId: id, to: req.user._id, isRead: false })
 		.populate("from", "socketId")
-		.then(MessageController.read)
+		.then(UpdateControllerSocket.read)
 
 	await Message.updateMany({ chatId: id, to: req.user._id, isRead: false }, { isRead: true })
 
