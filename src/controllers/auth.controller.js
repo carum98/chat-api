@@ -20,9 +20,7 @@ export const login = async (req, res) => {
 		})
 	}
 
-	const token = jwt.sign({ id: userFound._id }, process.env.JWT_SECRET, {
-		expiresIn: '1h',
-	})
+	const token = getToken(userFound)
 
 	return res.status(200).json({
 		message: 'Login successful',
@@ -52,12 +50,18 @@ export const register = async (req, res) => {
 
 	await user.save()
 
-	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-		expiresIn: '1h',
-	})
+	const token = getToken(user)
 
 	return res.status(200).json({
 		message: 'Registration successful',
 		token,
 	})
+}
+
+export const getToken = (user) => {
+	const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+		expiresIn: '1h',
+	})
+
+	return token
 }

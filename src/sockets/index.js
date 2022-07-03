@@ -7,6 +7,8 @@ import UpdatesMiddleware from "./middlewares/updates.middleware.js"
 import chatHandler from "./handlers/chat.handler.js"
 import updatesHandler from "./handlers/updates.handler.js"
 
+import qrHandler from "./handlers/qr.handler.js"
+
 export const CreateSocket = (httpServer) => {
 	const io = new Server(httpServer, {
 		serveClient: true,
@@ -25,6 +27,7 @@ export const CreateSocket = (httpServer) => {
 
 	io.of('/chats').on("connection", chatHandler)
 	io.of('/updates').on("connection", updatesHandler)
+	io.of('/qr').on("connection", qrHandler)
 
 	return io
 }
