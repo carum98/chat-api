@@ -11,6 +11,7 @@ import ChatsRoutes from "./routes/chat.routes.js"
 import ContactsRoutes from "./routes/contacts.routes.js"
 import SelfRoutes from "./routes/self.routes.js"
 import QrRoutes from "./routes/qr.routes.js"
+import EmojisRoutes from "./routes/emojis.routes.js"
 
 const app = express()
 
@@ -29,5 +30,6 @@ app.use('/api/chats', ChatsRoutes)
 app.use('/api/contacts', ContactsRoutes)
 app.use('/api/self', SelfRoutes)
 app.use('/api/qr', QrRoutes)
+app.use('/api/emojis', EmojisRoutes)
 
 export default createServer(app)

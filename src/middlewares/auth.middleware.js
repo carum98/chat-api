@@ -2,7 +2,7 @@ import User from "../models/User.js"
 import jwt from "jsonwebtoken"
 
 export default async (req, res, next) => {
-	const nonSecurePaths = ['/api/login', '/api/register', '/api/qr', '/admin/', '/admin/index.js', '/socket.io/socket.io.js', '/admin/img/favicon.ico', '/admin/index.css'];
+	const nonSecurePaths = ['/api/login', '/api/register', '/api/qr', '/api/emojis', '/admin/', '/admin/index.js', '/socket.io/socket.io.js', '/admin/img/favicon.ico', '/admin/index.css'];
 	if (nonSecurePaths.includes(req.path)) return next();
 
 	try {
@@ -23,6 +23,6 @@ export default async (req, res, next) => {
 
 		next()
 	} catch (error) {
-		return res.status(500).json({ message: 'Unauthorized' })
+		return res.status(401).json({ message: 'Unauthorized' })
 	}
 }
