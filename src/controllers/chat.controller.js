@@ -2,6 +2,7 @@ import Chat from "../models/Chat.js"
 import User from "../models/User.js"
 import Message from "../models/Message.js"
 import * as UpdateControllerSocket from "../sockets/controllers/update.controller.js"
+import * as ChatControllerSocket from "../sockets/controllers/chat.controller.js"
 
 export const get = async (req, res) => {
 	let chats = await Chat.find({ users: { $in: req.user._id } })
@@ -65,7 +66,10 @@ export const messages = async (req, res) => {
 
 	Message.find({ chatId: id, to: req.user._id, isRead: false })
 		.populate("from", "socketId")
-		.then(UpdateControllerSocket.read)
+		.then((data) => {
+			UpdateControllerSocket.read(data)
+			ChatControllerSocket.read(data)
+		})
 
 	await Message.updateMany({ chatId: id, to: req.user._id, isRead: false }, { isRead: true })
 
