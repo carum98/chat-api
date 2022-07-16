@@ -43,9 +43,15 @@ export const create = async (req, res) => {
 		return res.status(404).json({ message: "User not found" })
 	}
 
-	let chatRaw = await Chat.create({
-		users: [req.user._id, user._id],
-	})
+	let chatRaw = null
+
+	let chatExit = await Chat.findOne({ users: { $all: [req.user._id, user._id] } })
+
+	if (chatExit) {
+		chatRaw = chatExit
+	} else {
+		chatRaw = await Chat.create({ users: [req.user._id, user._id] })
+	}
 
 	let chat = await Chat.findById(chatRaw._id)
 		.populate("users", "name image socketId")
