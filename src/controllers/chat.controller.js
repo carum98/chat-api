@@ -35,9 +35,9 @@ export const get = async (req, res) => {
 }
 
 export const create = async (req, res) => {
-	const { number } = req.body
+	const { user_id } = req.body
 
-	let user = await User.findOne({ number })
+	let user = await User.findOne({ _id: user_id })
 
 	if (!user) {
 		return res.status(404).json({ message: "User not found" })
