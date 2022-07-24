@@ -24,6 +24,8 @@ npm run up
   - [Chat](#socket-chat)
   - [Updates](#socket-updates)
   - [QR Code](#socket-qr-code)
+- [Contacts](#contacts)
+  - [Get contacts](#get-contacts)
 - [Chats](#chats)
   - [Get Chats](#get-chats)
   - [Create Chat](#create-chat)
@@ -162,6 +164,38 @@ To connect to the web-socket, you need to use the [Socket IO](https://socket.io/
 | Event | Description |
 | :--- | :--- |
 | qr:login | |
+
+
+## Contacts
+
+
+
+### Get contacts
+```http
+GET /api/contacts
+```
+#### Response
+```json
+{
+    "data": [
+        {
+            "name": "Carlos",
+            "image": "1655607381025.jpg",
+            "id": "629bfb7ea87bc18c9eccae80"
+        },
+        {
+            "name": "Eduardo",
+            "image": "1655607458910.jpg",
+            "id": "629c20685fd726b98babccee"
+        },
+        {
+            "name": "Maria",
+            "image": "1655607537030.jpg",
+            "id": "629c23f99410441cce163eaa"
+        }
+    ]
+}
+```
 
 
 
