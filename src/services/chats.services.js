@@ -4,11 +4,20 @@ import { countMessages } from "./messages.services.js"
 import * as UpdateSocket from "../sockets/controllers/update.controller.js"
 
 /**
+ * Get chat by id.
+ *  
+ * @param {string} chatId 
+ */
+export const getChat = async (chatId) => {
+	return await Chat.findById(chatId)
+}
+
+/**
  * Get all chats by user id.
  * 
  * @param {string} userId 
  */
-export const getByUserId = async (userId) => {
+export const getChats = async (userId) => {
 	const chats = await Chat.find({ users: { $in: userId } })
 		.populate("users", "name image")
 		.populate("message", "id content createdAt isRead from")

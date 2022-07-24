@@ -1,6 +1,6 @@
 import User from "../models/User.js"
 
-import { getByUserId, createChat, socketChatCreated } from "../services/chats.services.js"
+import { getChats, createChat, socketChatCreated } from "../services/chats.services.js"
 import { readMessages, getMessages, socketReadMessages } from "../services/messages.services.js"
 
 /**
@@ -8,7 +8,7 @@ import { readMessages, getMessages, socketReadMessages } from "../services/messa
  */
 export const get = async (req, res) => {
 	const { user } = req
-	const chats = await getByUserId(user.id)
+	const chats = await getChats(user.id)
 
 	return res.status(200).json({ data: chats })
 }

@@ -5,6 +5,5 @@ const router = Router()
 
 router.post("/", Controller.create)
 router.get("/:id", Controller.get)
-router.put("/:id", Controller.update)
 
 export default router
