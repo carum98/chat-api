@@ -3,15 +3,15 @@ import morgan from "morgan"
 import cors from "cors"
 import { createServer } from "http"
 
-import AuthMiddleware from "./middlewares/auth.middleware.js"
+import AuthMiddleware from "../middlewares/auth.middleware.js"
 
-import AuthRoutes from "./routes/auth.routes.js"
-import MessageRoutes from "./routes/message.routes.js"
-import ChatsRoutes from "./routes/chat.routes.js"
-import ContactsRoutes from "./routes/contacts.routes.js"
-import SelfRoutes from "./routes/self.routes.js"
-import QrRoutes from "./routes/qr.routes.js"
-import EmojisRoutes from "./routes/emojis.routes.js"
+import AuthRoutes from "../routes/auth.routes.js"
+import MessageRoutes from "../routes/message.routes.js"
+import ChatsRoutes from "../routes/chat.routes.js"
+import ContactsRoutes from "../routes/contacts.routes.js"
+import SelfRoutes from "../routes/self.routes.js"
+import QrRoutes from "../routes/qr.routes.js"
+import EmojisRoutes from "../routes/emojis.routes.js"
 
 const app = express()
 

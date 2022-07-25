@@ -1,8 +1,8 @@
 import 'dotenv/config'
 import { CreateSocket } from "./sockets/index.js"
-import app from "./app.js"
+import app from "./config/app.js"
 
-import "./database.js"
+import "./config/database.js"
 
 export const io = CreateSocket(app)
 
