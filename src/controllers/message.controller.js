@@ -25,7 +25,8 @@ export const create = async (req, res) => {
 		return res.status(404).json({ message: "Chat not found" })
 	}
 
-	const message = createMessage(content, `${req.user._id}`, chat)
+	const message = await createMessage(content, `${req.user._id}`, chat)
+
 	socketNewMessage(`${message.id}`, `${req.user._id}`, chat_id)
 
 	await chat.updateOne({ message: message.id })
