@@ -1,11 +1,15 @@
-import 'dotenv/config'
-import { CreateSocket } from "./sockets/index.js"
-import app from "./config/app.js"
+import "./config/env.js"
 
-import "./config/database.js"
+import httpServer from "./config/http.js"
+import connectDB from "./config/database.js"
+import socketIo from "./config/websocket.js"
 
-export const io = CreateSocket(app)
+(async () => {
+	await connectDB()
 
-app.listen(process.env.PORT, () => {
-	console.log(`Server is running on port ${process.env.PORT}`)
-})
+	httpServer.listen(process.env.PORT, () => {
+		console.log(`Server is running on port ${process.env.PORT}`)
+	})
+})()
+
+export const io = socketIo

@@ -1,7 +1,6 @@
 import express from "express"
 import morgan from "morgan"
 import cors from "cors"
-import { createServer } from "http"
 
 import AuthMiddleware from "../middlewares/auth.middleware.js"
 
@@ -32,4 +31,4 @@ app.use('/api/self', SelfRoutes)
 app.use('/api/qr', QrRoutes)
 app.use('/api/emojis', EmojisRoutes)
 
-export default createServer(app)
+export default app
