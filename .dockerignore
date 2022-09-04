@@ -1,3 +1,7 @@
 /node_modules
 Dockerfile
 .dockerignore
+uploads
+.env
+.env.example
+README.md
